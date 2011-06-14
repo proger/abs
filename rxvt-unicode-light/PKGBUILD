@@ -1,0 +1,44 @@
+# $Id: PKGBUILD 124251 2011-05-18 04:52:29Z angvp $
+# Maintainer: Angel Velasquez <angvp@archlinux.org> 
+# Contributor: tobias <tobias@archlinux.org>
+# Contributor: dibblethewrecker dibblethewrecker.at.jiwe.dot.org
+
+pkgname=rxvt-unicode-light
+pkgver=9.11
+pkgrel=2
+pkgdesc="An unicode enabled rxvt-clone terminal emulator (urxvt)"
+arch=('i686' 'x86_64')
+url="http://software.schmorp.de/pkg/rxvt-unicode.html"
+license=('GPL')
+depends=('gcc-libs' 'libxft' 'gdk-pixbuf2')
+conflicts=('rxvt-unicode')
+#optdepends=()
+changelog=ChangeLog
+source=(http://dist.schmorp.de/rxvt-unicode/rxvt-unicode-${pkgver}.tar.bz2)
+md5sums=('1bed5bfeed026e0bfafa0e9e4f62aa37')
+sha1sums=('21d0fad9a6032dbcf2c43a85f288543c6bd5ab3d')
+
+build() {
+  cd "${srcdir}/rxvt-unicode-${pkgver}"
+  ./configure --prefix=/usr \
+    --disable-everything \
+    --with-terminfo=/usr/share/terminfo \
+    --enable-256-color \
+    --enable-font-styles \
+    --enable-xft \
+    --enable-keepscrolling \
+    --enable-selectionscrolling \
+    --enable-smart-resize \
+    --enable-utmp \
+    --enable-wtmp \
+    --enable-lastlog \
+    --enable-fading
+  make
+}
+
+package() {
+  cd "${srcdir}/rxvt-unicode-${pkgver}"
+  install -d "${pkgdir}/usr/share/terminfo"
+  export TERMINFO="${pkgdir}/usr/share/terminfo"
+  make DESTDIR="${pkgdir}" install
+}
